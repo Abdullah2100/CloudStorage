@@ -1,0 +1,24 @@
+{
+    "onboarding_1_title":"Enjoy the Cloud memory application for\n free without ads",
+    "onboarding_2_title":"The fastest application for saving data and files\nAnd cloud storage",
+    "onboarding_3_title":"Enjoy our packages\n Featured at the lowest prices",
+  "next":"next",
+  "skip":"skip",
+  "home": "Home",
+  "notification": "Notification",
+  "trash": "Trash",
+  "setting": "Setting",
+  "lang": "English",
+  "createAnAccount": "Create an account",
+  "signInToYourCloudStorageAccount":"Sign in to your cloud storage account",
+  "signIn": "Sign In",
+  "email": "Email",
+  "phone": "Phone",
+  "userName": "UserName",
+  "password": "Password",
+  "enterYourAccountName":"Enter your account name",
+  "enterEmail": "Enter your email",
+  "enterPhone":"Enter a phone number"
+
+
+}
