@@ -42,7 +42,7 @@ class clsShardPrefHelper {
     }
   }
 
-  static Object? getDataFromShared(String key_name)async{
+  static Future<Object?> getDataFromShared(String key_name)async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     try{
       return prefs.get(key_name);

@@ -1,4 +1,4 @@
-class clsTypeNameModle{
+class clsContactTypModle{
   int _id = 0;
   String _name ="";
 
@@ -9,10 +9,11 @@ class clsTypeNameModle{
     this._id = id;
     this._name = name;
   }
-  clsTypeNameModle.fromJson(Map<String, dynamic> json) {
+
+
+  clsContactTypModle.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
     _name = json['name'];
   }
-
 
 }

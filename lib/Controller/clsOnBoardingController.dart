@@ -1,8 +1,5 @@
 
 import 'package:flutter/cupertino.dart';
-import 'package:cloudapp/Helper/clsImages.dart';
-
-import '../Modle/clsOnBoardData.dart';
 class clsOnBoardingController extends ChangeNotifier {
 
    int _currentIndex=0;
@@ -10,9 +7,9 @@ class clsOnBoardingController extends ChangeNotifier {
 
    int get currentIndex =>_currentIndex;
 
-     void increaseIndex(){
+     void increaseIndex({int index =1 }){
       if(_currentIndex<2) {
-        _currentIndex++;
+        _currentIndex+=index;
         notifyListeners();
       }
 

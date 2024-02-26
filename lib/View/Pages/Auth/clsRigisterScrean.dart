@@ -1,5 +1,4 @@
 import 'package:cloudapp/Controller/clsLocalizationContoller.dart';
-import 'package:cloudapp/Controller/clsStateController.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,14 +9,12 @@ import 'package:cloudapp/Helper/clsCustomMessage.dart';
 import 'package:cloudapp/Helper/clsDeviceSize.dart';
 import 'package:cloudapp/Helper/clsFontStyle.dart';
 import 'package:cloudapp/Helper/clsImages.dart';
-import 'package:cloudapp/Helper/clsShardName.dart';
 import 'package:cloudapp/Modle/clsRigesterModle.dart';
-import 'package:cloudapp/Util/clsShardPrefHelper.dart';
 import 'package:cloudapp/Util/clsValidation.dart';
 import 'package:cloudapp/View/GenralComponent/clsTextReqiured.dart';
 import 'package:provider/provider.dart';
 import 'package:cloudapp/View/Pages/Auth/clsForgetAndReseatPassword.dart';
-import 'package:cloudapp/View/Pages/Home/clsHomeScrean.dart';
+import 'package:cloudapp/View/Pages/Home/clsbuttonSheetPages.dart';
 
 import '../../../Animation/clsRithSlideAnimation.dart';
 import '../../../Modle/clsLoginModle.dart';
@@ -45,25 +42,22 @@ class _clsRigisterScreanState extends State<clsRigisterScrean> {
   FocusNode _passwordNode = FocusNode();
   FocusNode _phoneNode = FocusNode();
 
-
   void _resultAction(String? message, isComplate) {
     switch (isComplate) {
       case true:
         {
-          Provider.of<clsAuthController>(context, listen: false)
-              .changeLoadingState(false);
           switch (widget.isRigister) {
             case true:
               {
-                clsCustomMessage.Message(message??"", true, context);
+                clsCustomMessage.Message(message ?? "", true, context);
                 Navigator.of(context).pushReplacement(
-                    clsRithSlideAnimation(page: clsHomeScrean()));
+                    clsRithSlideAnimation(page: clsbuttonSheetPages()));
               }
             default:
               {
-                clsCustomMessage.Message(message??"", true, context);
+                clsCustomMessage.Message(message ?? "", true, context);
                 Navigator.of(context).pushReplacement(
-                    clsRithSlideAnimation(page: clsHomeScrean()));
+                    clsRithSlideAnimation(page: clsbuttonSheetPages()));
               }
           }
         }
@@ -72,9 +66,6 @@ class _clsRigisterScreanState extends State<clsRigisterScrean> {
           clsCustomMessage.Message("$message", false, context);
         }
     }
-    Provider.of<clsAuthController>(context, listen: false)
-        .changeLoadingState(false);
-
   }
 
   void _rigisterUser() async {
@@ -134,27 +125,12 @@ class _clsRigisterScreanState extends State<clsRigisterScrean> {
   }
 
   void _isAllReadyLogin() async {
-    bool isHasToken =
-        await clsShardPrefHelper(clsShardName.token_shard).isNameSaved();
-    // String? isHasToken =
-    // await clsShardPrefHelper.getDataFromShared(clsShardName.token_shard) as String?;
-    // print(isHahardPrefHelper.getDataFromShared(clsShardName.token_shard) as String?;);
-    if (isHasToken == true) {
-      Navigator.of(context)
-          .pushReplacement(clsRithSlideAnimation(page: clsHomeScrean()));
-    }else{
-      setState(() {
-        isNotAuth = false;
-      });
-    }
-  }
-
-  void _changingLanguageA()async{
-    Provider.of<clsStateController>(context,listen: false).changeLanguseState();
-    Provider.of<clsLocalizationContoller>(context,listen: false).updateLocalization();
-   await Future.delayed(const Duration(seconds: 2));
-    Provider.of<clsStateController>(context,listen: false).changeLanguseState();
-
+    await Provider.of<clsAuthController>(context, listen: false)
+        .isValideToken().then((value) => {
+          if(value==true){
+            Navigator.of(context).pushReplacement(clsRithSlideAnimation(page: clsbuttonSheetPages()))
+          }
+        });
   }
 
   @override
@@ -166,456 +142,509 @@ class _clsRigisterScreanState extends State<clsRigisterScrean> {
   @override
   Widget build(BuildContext context) {
     var pvAuthController = Provider.of<clsAuthController>(context);
-    var pvStateController= Provider.of<clsStateController>(context);
-    return Scaffold(
-      body: isNotAuth?Text(""): SingleChildScrollView(
-        child:pvStateController.isChagenLanguage?Container(
-        height: clsDeviceSize.getDeviceHeight(context),
-        width: clsDeviceSize.getDeviceWidth(context),
-        alignment: Alignment.center
-        ,child: CircularProgressIndicator(color: clsColors.secondary,)): Container(
-          margin: const EdgeInsets.only(right: 15, left: 15, top: 79),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.isRigister ? S.of(context).createAnAccount : S.of(context).signIn,
-                        style: clsFontStyle.bloodStyle.copyWith(
-                            fontSize: 20, color: clsColors.onbardingColor),
-                      ),
-                      Text(
-                        S.of(context).signInToYourCloudStorageAccount,
-                        style: clsFontStyle.regularStyle
-                            .copyWith(fontSize: 12, color: clsColors.gray),
-                      )
-                    ],
-                  ),
-                  InkWell(
-                    onTap: (){
-                      _changingLanguageA();
-                    },
-                    child: Row(
-                      children: [
-                        Text(
-                          S.of(context).lang,
-                          style: clsFontStyle.regularStyle
-                              .copyWith(fontSize: 12, color: clsColors.secondary),
-                        ),
-                        Icon(
-                          Icons.keyboard_arrow_down_outlined,
-                          color: clsColors.secondary,
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    color: clsColors.grayLow,
-                    borderRadius: BorderRadius.circular(12)),
-                padding: EdgeInsets.all(5),
-                height: 50,
-                child: SizedBox(
-                  child: Row(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            isEmail = true;
-                          });
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: isEmail ? Colors.white : Colors.transparent,
-                          ),
-                          width:
-                              (clsDeviceSize.getDeviceWidth(context) / 2) - 20,
-                          child: Text(
-                            S.of(context).email,
-                            style: clsFontStyle.mediamStyle.copyWith(
-                                color: clsColors.onbardingColor, fontSize: 14),
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            isEmail = false;
-                          });
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: isEmail ? Colors.transparent : Colors.white,
-                          ),
-                          width:
-                              (clsDeviceSize.getDeviceWidth(context) / 2) - 20,
-                          child: Text(S.of(context).phone,
-                              style: clsFontStyle.mediamStyle.copyWith(
-                                  color: clsColors.onbardingColor,
-                                  fontSize: 14)),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              if (widget.isRigister) ...[
-                const SizedBox(
-                  height: 30,
-                ),
-                clsTextReqiured(
-                    style: clsFontStyle.mediamStyle
-                        .copyWith(fontSize: 14, color: Colors.black),
-                    value: S.of(context).userName ),
-                Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: clsColors.grayLow,
-                    ),
-                    width: clsDeviceSize.getDeviceWidth(context),
-                    child: TextField(
-                      focusNode: _userNode,
-                      controller: _userName,
-                      onSubmitted: (value) {
-                        isEmail
-                            ? FocusScope.of(context).requestFocus(_emailNode)
-                            : FocusScope.of(context).requestFocus(_phoneNode);
-                      },
-                      style: clsFontStyle.mediamStyle.copyWith(
-                        fontSize: 18,
-                        color: clsColors.gray,
-                      ),
-                      decoration: InputDecoration(
-                          label: Padding(
-                            padding: const EdgeInsets.only(right: 20),
-                            child: Text(
-                              S.of(context).enterYourAccountName,
-                              textAlign: TextAlign.center,
-                              style: clsFontStyle.mediamStyle.copyWith(
-                                  fontSize: 14, color: clsColors.gray),
-                            ),
-                          ),
-                          border: InputBorder.none,
-                          fillColor: clsColors.gray,
-                          prefixIcon: Image.asset(
-                            clsImages.user,
-                            height: 24,
-                            width: 24,
-                            color: clsColors.gray,
-                          )),
-                    )),
+    var pvLocalizationController =
+        Provider.of<clsLocalizationContoller>(context);
+    // return
+    //  FutureBuilder<bool>(
+    //   // future: ,
+    //   builder: (context, snapshot) {
 
+    //     if(snapshot.data==true){
+    //       Navigator.of(context)
+    //           .pushReplacement(clsRithSlideAnimation(page: buttonSheetPages()));
 
-              ],
-              const SizedBox(
-                height: 20,
-              ),
-              if (isEmail) ...[
-                clsTextReqiured(
-                    style: clsFontStyle.mediamStyle
-                        .copyWith(fontSize: 14, color: Colors.black),
-                    value: S.of(context).email),
-                Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: clsColors.grayLow,
-                    ),
-                    width: clsDeviceSize.getDeviceWidth(context),
-                    child: TextField(
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z@.]")),
-                      ],
-                      keyboardType: TextInputType.emailAddress,
-                      controller: _email,
-                      focusNode: _emailNode,
-                      onSubmitted: (value) {
-                        FocusScope.of(context).requestFocus(_passwordNode);
-                      },
-                      style: clsFontStyle.mediamStyle.copyWith(
-                        fontSize: 18,
-                        color: clsColors.gray,
-                      ),
-                      decoration: InputDecoration(
-                          label: Padding(
-                            padding: const EdgeInsets.only(right: 20),
-                            child: Text(
-                              S.of(context).enterEmail,
-                              textAlign: TextAlign.center,
-                              style: clsFontStyle.mediamStyle.copyWith(
-                                  fontSize: 14, color: clsColors.gray),
+    //     }
+    return Consumer<clsAuthController>(builder: (context, value, snapshot) {
+          if(value.isValideAuth==false){
+         return Scaffold(
+        body: SingleChildScrollView(
+          child: pvLocalizationController.isChagneLoanguage
+              ? Container(
+                  height: clsDeviceSize.getDeviceHeight(context),
+                  width: clsDeviceSize.getDeviceWidth(context),
+                  alignment: Alignment.center,
+                  child: CircularProgressIndicator(
+                    color: clsColors.secondary,
+                  ))
+              : Container(
+                  margin: const EdgeInsets.only(right: 15, left: 15, top: 79),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.isRigister
+                                    ? S.of(context).createAnAccount
+                                    : S.of(context).signIn,
+                                style: clsFontStyle.bloodStyle.copyWith(
+                                    fontSize: 20,
+                                    color: clsColors.onbardingColor),
+                              ),
+                              Text(
+                                S.of(context).signInToYourCloudStorageAccount,
+                                style: clsFontStyle.regularStyle.copyWith(
+                                    fontSize: 12, color: clsColors.gray),
+                              )
+                            ],
+                          ),
+                          InkWell(
+                            onTap: () {
+                              pvLocalizationController.updateLocalization();
+                            },
+                            child: Row(
+                              children: [
+                                Text(
+                                  S.of(context).lang,
+                                  style: clsFontStyle.regularStyle.copyWith(
+                                      fontSize: 12, color: clsColors.secondary),
+                                ),
+                                Icon(
+                                  Icons.keyboard_arrow_down_outlined,
+                                  color: clsColors.secondary,
+                                )
+                              ],
                             ),
                           ),
-                          border: InputBorder.none,
-                          fillColor: clsColors.gray,
-                          prefixIcon: Image.asset(
-                            clsImages.user,
-                            height: 24,
-                            width: 24,
-                            color: clsColors.gray,
-                          )),
-                    ))
-              ] else ...[
-                clsTextReqiured(
-                    style: clsFontStyle.mediamStyle
-                        .copyWith(fontSize: 14, color: Colors.black),
-                    value: S.of(context).phone),
-                Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: clsColors.grayLow,
-                    ),
-                    width: clsDeviceSize.getDeviceWidth(context),
-                    child: TextField(
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-                      ],
-                      keyboardType: TextInputType.phone,
-                      focusNode: _phoneNode,
-                      controller: _phoe,
-                      onSubmitted: (value) {
-                        FocusScope.of(context).requestFocus(_passwordNode);
-                      },
-                      style: clsFontStyle.mediamStyle.copyWith(
-                        fontSize: 18,
-                        color: clsColors.gray,
-                      ),
-                      decoration: InputDecoration(
-                          label: Padding(
-                            padding: const EdgeInsets.only(right: 20),
-                            child: Text(
-                              S.of(context).enterPhone,
-                              textAlign: TextAlign.center,
-                              style: clsFontStyle.mediamStyle.copyWith(
-                                  fontSize: 14, color: clsColors.gray),
-                            ),
-                          ),
-                          border: InputBorder.none,
-                          fillColor: clsColors.gray,
-                          prefixIcon: Image.asset(
-                            clsImages.arabic,
-                            height: 24,
-                            width: 24,
-                          )),
-                    ))
-              ],
-              const SizedBox(
-                height: 20,
-              ),
-              clsTextReqiured(
-                  style: clsFontStyle.mediamStyle
-                      .copyWith(fontSize: 14, color: Colors.black),
-                  value: S.of(context).password),
-              Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: clsColors.grayLow,
-                  ),
-                  width: clsDeviceSize.getDeviceWidth(context),
-                  child: TextField(
-                    controller: _password,
-                    focusNode: _passwordNode,
-                    style: clsFontStyle.mediamStyle.copyWith(
-                      fontSize: 18,
-                      color: clsColors.gray,
-                    ),
-                    obscureText: isShownPass,
-                    decoration: InputDecoration(
-                        suffixIcon: isShownPass
-                            ? IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    isShownPass = false;
-                                  });
-                                },
-                                icon: Icon(
-                                  Icons.visibility_off,
-                                  color: clsColors.gray,
-                                ))
-                            : IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    isShownPass = true;
-                                  });
-                                },
-                                icon: Icon(
-                                  Icons.visibility,
-                                  color: clsColors.gray,
-                                )),
-                        label: Padding(
-                          padding: const EdgeInsets.only(right: 20),
-                          child: Text(
-                            "******",
-                            textAlign: TextAlign.center,
-                            style: clsFontStyle.mediamStyle
-                                .copyWith(fontSize: 14, color: clsColors.gray),
-                          ),
-                        ),
-                        border: InputBorder.none,
-                        fillColor: clsColors.gray,
-                        prefixIcon: Image.asset(
-                          clsImages.lock,
-                          height: 24,
-                          width: 24,
-                          color: clsColors.gray,
-                        )),
-                  )),
-             
-             
-              const SizedBox(
-                height: 10,
-              ),
-              if (!widget.isRigister) ...[
-                Container(
-                  width: clsDeviceSize.getDeviceWidth(context),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                clsRithSlideAnimation(
-                                    page: clsForgetAndReseatPassword()));
-                          },
-                          child: Text(
-                            "نسيت كلمة السر؟",
-                            style: clsFontStyle.bloodStyle.copyWith(
-                                color: clsColors.secondary, fontSize: 12),
-                          ))
-                    ],
-                  ),
-                )
-              ],
-              const SizedBox(
-                height: 10,
-              ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                      fixedSize:
-                          Size(clsDeviceSize.getDeviceWidth(context), 50),
-                      backgroundColor: clsColors.primary),
-                  onPressed: () {
-                    return widget.isRigister ? _rigisterUser() : _loginUser();
-                  },
-                  child: pvAuthController.isStartLoading
-                      ? CircularProgressIndicator(
-                          color: clsColors.white,
-                        )
-                      : Text(
-                          "تسجيل",
-                          style: clsFontStyle.regularStyle
-                              .copyWith(fontSize: 16, color: Colors.white),
-                        )),
-              const SizedBox(
-                height: 15,
-              ),
-              SizedBox(
-                width: clsDeviceSize.getDeviceWidth(context),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      clsImages.secondRigsterConditionLable,
-                      width: clsDeviceSize.getDeviceWidth(context) - 30,
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
-                height: 52,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: clsColors.grayLignt)),
-                width: clsDeviceSize.getDeviceWidth(context),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      clsImages.googleIcon,
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    Text(
-                      "متابعة عن طريق جوجل",
-                      textAlign: TextAlign.center,
-                      style: clsFontStyle.mediamStyle
-                          .copyWith(fontSize: 14, color: clsColors.black),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              InkWell(
-                onTap: () {
-                  switch (widget.isRigister) {
-                    case true:
-                      {
-                        Navigator.of(context).push(clsRithSlideAnimation(
-                            page: clsRigisterScrean(
-                          isRigister: false,
-                        )));
-                      }
-                    default:
-                      {
-                        Navigator.of(context).push(clsRithSlideAnimation(
-                            page: clsRigisterScrean(
-                          isRigister: true,
-                        )));
-                      }
-                  }
-                },
-                child: Container(
-                  height: 52,
-                  width: clsDeviceSize.getDeviceWidth(context),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        widget.isRigister
-                            ? "تمتلك حسابا على المنصة؟"
-                            : "تمتلك حسابا على المنصة؟",
-                        textAlign: TextAlign.center,
-                        style: clsFontStyle.mediamStyle
-                            .copyWith(fontSize: 14, color: clsColors.black),
+                        ],
                       ),
                       const SizedBox(
-                        width: 5,
+                        height: 30,
                       ),
-                      Text(
-                        widget.isRigister ? "سجل الدخول" : "أنشء حساب",
-                        textAlign: TextAlign.center,
-                        style: clsFontStyle.mediamStyle
-                            .copyWith(fontSize: 14, color: clsColors.primary),
+                      Container(
+                        decoration: BoxDecoration(
+                            color: clsColors.grayLow,
+                            borderRadius: BorderRadius.circular(12)),
+                        padding: const EdgeInsets.all(5),
+                        height: 50,
+                        child: SizedBox(
+                          child: Row(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    isEmail = true;
+                                  });
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: isEmail
+                                        ? Colors.white
+                                        : Colors.transparent,
+                                  ),
+                                  width:
+                                      (clsDeviceSize.getDeviceWidth(context) /
+                                              2) -
+                                          20,
+                                  child: Text(
+                                    S.of(context).email,
+                                    style: clsFontStyle.mediamStyle.copyWith(
+                                        color: clsColors.onbardingColor,
+                                        fontSize: 14),
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    isEmail = false;
+                                  });
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: isEmail
+                                        ? Colors.transparent
+                                        : Colors.white,
+                                  ),
+                                  width:
+                                      (clsDeviceSize.getDeviceWidth(context) /
+                                              2) -
+                                          20,
+                                  child: Text(S.of(context).phone,
+                                      style: clsFontStyle.mediamStyle.copyWith(
+                                          color: clsColors.onbardingColor,
+                                          fontSize: 14)),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      if (widget.isRigister) ...[
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        clsTextReqiured(
+                            style: clsFontStyle.mediamStyle
+                                .copyWith(fontSize: 14, color: Colors.black),
+                            value: S.of(context).userName),
+                        Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: clsColors.grayLow,
+                            ),
+                            width: clsDeviceSize.getDeviceWidth(context),
+                            child: TextField(
+                              focusNode: _userNode,
+                              controller: _userName,
+                              onSubmitted: (value) {
+                                isEmail
+                                    ? FocusScope.of(context)
+                                        .requestFocus(_emailNode)
+                                    : FocusScope.of(context)
+                                        .requestFocus(_phoneNode);
+                              },
+                              style: clsFontStyle.mediamStyle.copyWith(
+                                fontSize: 18,
+                                color: clsColors.gray,
+                              ),
+                              decoration: InputDecoration(
+                                  label: Padding(
+                                    padding: const EdgeInsets.only(right: 20),
+                                    child: Text(
+                                      S.of(context).enterYourAccountName,
+                                      textAlign: TextAlign.center,
+                                      style: clsFontStyle.mediamStyle.copyWith(
+                                          fontSize: 14, color: clsColors.gray),
+                                    ),
+                                  ),
+                                  border: InputBorder.none,
+                                  fillColor: clsColors.gray,
+                                  prefixIcon: Image.asset(
+                                    clsImages.user,
+                                    height: 24,
+                                    width: 24,
+                                    color: clsColors.gray,
+                                  )),
+                            )),
+                      ],
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      if (isEmail) ...[
+                        clsTextReqiured(
+                            style: clsFontStyle.mediamStyle
+                                .copyWith(fontSize: 14, color: Colors.black),
+                            value: S.of(context).email),
+                        Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: clsColors.grayLow,
+                            ),
+                            width: clsDeviceSize.getDeviceWidth(context),
+                            child: TextField(
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.allow(
+                                    RegExp("[a-zA-Z@.]")),
+                              ],
+                              keyboardType: TextInputType.emailAddress,
+                              controller: _email,
+                              focusNode: _emailNode,
+                              onSubmitted: (value) {
+                                FocusScope.of(context)
+                                    .requestFocus(_passwordNode);
+                              },
+                              style: clsFontStyle.mediamStyle.copyWith(
+                                fontSize: 18,
+                                color: clsColors.gray,
+                              ),
+                              decoration: InputDecoration(
+                                  label: Padding(
+                                    padding: const EdgeInsets.only(right: 20),
+                                    child: Text(
+                                      S.of(context).enterEmail,
+                                      textAlign: TextAlign.center,
+                                      style: clsFontStyle.mediamStyle.copyWith(
+                                          fontSize: 14, color: clsColors.gray),
+                                    ),
+                                  ),
+                                  border: InputBorder.none,
+                                  fillColor: clsColors.gray,
+                                  prefixIcon: Image.asset(
+                                    clsImages.user,
+                                    height: 24,
+                                    width: 24,
+                                    color: clsColors.gray,
+                                  )),
+                            ))
+                      ] else ...[
+                        clsTextReqiured(
+                            style: clsFontStyle.mediamStyle
+                                .copyWith(fontSize: 14, color: Colors.black),
+                            value: S.of(context).phone),
+                        Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: clsColors.grayLow,
+                            ),
+                            width: clsDeviceSize.getDeviceWidth(context),
+                            child: TextField(
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.allow(
+                                    RegExp("[0-9]")),
+                              ],
+                              keyboardType: TextInputType.phone,
+                              focusNode: _phoneNode,
+                              controller: _phoe,
+                              onSubmitted: (value) {
+                                FocusScope.of(context)
+                                    .requestFocus(_passwordNode);
+                              },
+                              style: clsFontStyle.mediamStyle.copyWith(
+                                fontSize: 18,
+                                color: clsColors.gray,
+                              ),
+                              decoration: InputDecoration(
+                                  label: Padding(
+                                    padding: const EdgeInsets.only(right: 20),
+                                    child: Text(
+                                      S.of(context).enterPhone,
+                                      textAlign: TextAlign.center,
+                                      style: clsFontStyle.mediamStyle.copyWith(
+                                          fontSize: 14, color: clsColors.gray),
+                                    ),
+                                  ),
+                                  border: InputBorder.none,
+                                  fillColor: clsColors.gray,
+                                  prefixIcon: Image.asset(
+                                    clsImages.arabic,
+                                    height: 24,
+                                    width: 24,
+                                  )),
+                            ))
+                      ],
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      clsTextReqiured(
+                          style: clsFontStyle.mediamStyle
+                              .copyWith(fontSize: 14, color: Colors.black),
+                          value: S.of(context).password),
+                      Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: clsColors.grayLow,
+                          ),
+                          width: clsDeviceSize.getDeviceWidth(context),
+                          child: TextField(
+                            controller: _password,
+                            focusNode: _passwordNode,
+                            style: clsFontStyle.mediamStyle.copyWith(
+                              fontSize: 18,
+                              color: clsColors.gray,
+                            ),
+                            obscureText: isShownPass,
+                            decoration: InputDecoration(
+                                suffixIcon: isShownPass
+                                    ? IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            isShownPass = false;
+                                          });
+                                        },
+                                        icon: Icon(
+                                          Icons.visibility_off,
+                                          color: clsColors.gray,
+                                        ))
+                                    : IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            isShownPass = true;
+                                          });
+                                        },
+                                        icon: Icon(
+                                          Icons.visibility,
+                                          color: clsColors.gray,
+                                        )),
+                                label: Padding(
+                                  padding: const EdgeInsets.only(right: 20),
+                                  child: Text(
+                                    "******",
+                                    textAlign: TextAlign.center,
+                                    style: clsFontStyle.mediamStyle.copyWith(
+                                        fontSize: 14, color: clsColors.gray),
+                                  ),
+                                ),
+                                border: InputBorder.none,
+                                fillColor: clsColors.gray,
+                                prefixIcon: Image.asset(
+                                  clsImages.lock,
+                                  height: 24,
+                                  width: 24,
+                                  color: clsColors.gray,
+                                )),
+                          )),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      if (!widget.isRigister) ...[
+                        Container(
+                          width: clsDeviceSize.getDeviceWidth(context),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        clsRithSlideAnimation(
+                                            page:
+                                                clsForgetAndReseatPassword()));
+                                  },
+                                  child: Text(
+                                    S.of(context).forgetPassword,
+                                    style: clsFontStyle.bloodStyle.copyWith(
+                                        color: clsColors.secondary,
+                                        fontSize: 12),
+                                  ))
+                            ],
+                          ),
+                        )
+                      ],
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                              fixedSize: Size(
+                                  clsDeviceSize.getDeviceWidth(context), 50),
+                              backgroundColor: clsColors.primary),
+                          onPressed: () {
+                            return widget.isRigister
+                                ? _rigisterUser()
+                                : _loginUser();
+                          },
+                          child: pvAuthController.isStartLoading
+                              ? CircularProgressIndicator(
+                                  color: clsColors.white,
+                                )
+                              : Text(
+                                  S.of(context).rigist,
+                                  style: clsFontStyle.regularStyle.copyWith(
+                                      fontSize: 16, color: Colors.white),
+                                )),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      SizedBox(
+                        width: clsDeviceSize.getDeviceWidth(context),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              clsImages.secondRigsterConditionLable,
+                              width: clsDeviceSize.getDeviceWidth(context) - 30,
+                            )
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                        height: 52,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: clsColors.grayLignt)),
+                        width: clsDeviceSize.getDeviceWidth(context),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              clsImages.googleIcon,
+                            ),
+                            const SizedBox(
+                              width: 15,
+                            ),
+                            Text(
+                              S.of(context).loginByGoogle,
+                              textAlign: TextAlign.center,
+                              style: clsFontStyle.mediamStyle.copyWith(
+                                  fontSize: 14, color: clsColors.black),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          switch (widget.isRigister) {
+                            case true:
+                              {
+                                Navigator.of(context)
+                                    .push(clsRithSlideAnimation(
+                                        page: clsRigisterScrean(
+                                  isRigister: false,
+                                )));
+                              }
+                            default:
+                              {
+                                Navigator.of(context)
+                                    .push(clsRithSlideAnimation(
+                                        page: clsRigisterScrean(
+                                  isRigister: true,
+                                )));
+                              }
+                          }
+                        },
+                        child: Container(
+                          height: 52,
+                          width: clsDeviceSize.getDeviceWidth(context),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                S.of(context).alreadyHavAccount,
+                                textAlign: TextAlign.center,
+                                style: clsFontStyle.mediamStyle.copyWith(
+                                    fontSize: 14, color: clsColors.black),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                widget.isRigister
+                                    ? S.of(context).logIn
+                                    : S.of(context).createAnAccount,
+                                textAlign: TextAlign.center,
+                                style: clsFontStyle.mediamStyle.copyWith(
+                                    fontSize: 14, color: clsColors.primary),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
-          ),
         ),
-      ),
-    );
+      );
+ 
+      }
+     
+        return Scaffold(
+          body: Container(
+            height: clsDeviceSize.getDeviceHeight(context),
+            width: clsDeviceSize.getDeviceWidth(context),
+            alignment: Alignment.center,
+            child: CircularProgressIndicator(
+              color: clsColors.secondary,
+            ),
+          ),
+        );
+        });
+    //   }
+    // );
   }
 }

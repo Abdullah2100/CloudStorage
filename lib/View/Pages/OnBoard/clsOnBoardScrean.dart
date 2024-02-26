@@ -103,7 +103,9 @@ class _clsOnBoardScreanState extends State<clsOnBoardScrean> {
                     icon: Icons.arrow_forward,
                     title: S.of(context).next,
                     onclick: () {
+
                       pvOnboardingContoller.increaseIndex();
+
                     },
                   )
                 ]
@@ -116,9 +118,11 @@ class _clsOnBoardScreanState extends State<clsOnBoardScrean> {
                           Size(clsDeviceSize.getDeviceWidth(context)-30, 50),
                           backgroundColor: clsColors.secondary),
                       onPressed: () {
+                        clsShardPrefHelper(clsShardName.onBoard_shard)
+                            .SaveDataToShard(true);
                         Navigator.pushReplacement(context,
                             clsRithSlideAnimation(page: clsRigisterScrean()));
-                        },
+                      },
                       child: Text(
                        S.of(context).skip,
                         style: clsFontStyle.regularStyle

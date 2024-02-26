@@ -1,16 +1,17 @@
 
 import 'package:cloudapp/Controller/clsCategoryController.dart';
 import 'package:cloudapp/Controller/clsContactContoller.dart';
+import 'package:cloudapp/Controller/clsContactTypController.dart';
 import 'package:cloudapp/Controller/clsLocalizationContoller.dart';
 import 'package:cloudapp/Controller/clsProfileContoller.dart';
-import 'package:cloudapp/Helper/clsColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloudapp/Controller/clsAuthController.dart';
 import 'package:cloudapp/Controller/clsOnBoardingController.dart';
 import 'package:cloudapp/View/Pages/Auth/clsRigisterScrean.dart';
 import 'Controller/clsCarsuolController.dart';
-import 'Controller/clsStateController.dart';
+import 'Controller/clsFileAndDocumentContorller.dart';
+import 'Controller/clsLinkAndSiteController.dart';
 import 'View/Pages/OnBoard/clsOnBoardScrean.dart';
 import 'package:cloudapp/Helper/clsShardName.dart';
 import 'package:cloudapp/Util/clsShardPrefHelper.dart';
@@ -39,8 +40,10 @@ class MyApp extends StatelessWidget {
         ,ChangeNotifierProvider<clsCarsuolController>(create: (_)=>clsCarsuolController())
         ,ChangeNotifierProvider<clsCategoryController>(create: (_)=>clsCategoryController())
         ,ChangeNotifierProvider<clsLocalizationContoller>(create: (_)=>clsLocalizationContoller())
-        ,ChangeNotifierProvider<clsStateController>(create: (_)=>clsStateController())
         ,ChangeNotifierProvider<clsContactController>(create: (_)=>clsContactController())
+        ,ChangeNotifierProvider<clsContactTypController>(create: (_)=>clsContactTypController())
+        ,ChangeNotifierProvider<clsLinkAndSiteController>(create: (_)=>clsLinkAndSiteController())
+        ,ChangeNotifierProvider<clsFileAndDocumentContorller>(create: (_)=>clsFileAndDocumentContorller())
       ],
       child:
         Consumer<clsLocalizationContoller>(
@@ -51,8 +54,8 @@ class MyApp extends StatelessWidget {
             return MaterialApp(
 
               debugShowCheckedModeBanner: false,
-            // locale: value.local
-            locale: Locale('ar')
+            locale: value.local
+          //  locale: Locale('ar')
             ,  localizationsDelegates: const [
               S.delegate,
                 GlobalMaterialLocalizations.delegate,
@@ -72,7 +75,7 @@ class MyApp extends StatelessWidget {
                 builder:(ctx,snapshot){
                  switch(snapshot.data){
                    case false:  {
-                     return clsOnBoardScrean();
+                     return const  clsOnBoardScrean();
                    }
                    default:{
 

@@ -22,8 +22,8 @@ class clsButtonsheppItmeShap extends StatelessWidget {
     return InkWell(
         onTap: this.onClick,
         child: Container(
-          height: 50,
-          width: 50,
+          height: 70,
+          width: 53,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -40,7 +40,7 @@ class clsButtonsheppItmeShap extends StatelessWidget {
                   opacity: 1.0,
                   duration: Duration(seconds: 1),
                   child: Text(
-                    this.currentIndex == this.itumIndex?this.title:"",
+                    this.title,
                     style: clsFontStyle.regularStyle
                         .copyWith(color: clsColors.primary, fontSize: 12),
                   ),

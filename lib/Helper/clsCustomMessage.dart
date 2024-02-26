@@ -7,6 +7,7 @@ import 'package:top_snackbar_flutter/tap_bounce_container.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 class clsCustomMessage {
  static void Message(String value, bool state, BuildContext context) {
+
    showTopSnackBar(
      Overlay.of(context),
      state==true?

@@ -10,6 +10,11 @@ class clsLocalizationContoller extends ChangeNotifier{
 
   Locale? get local => _local;
 
+  bool _isChageLanguage =false;
+  bool get isChagneLoanguage => _isChageLanguage;
+
+
+
   void loadLocalization()async{
     String? localCode = await clsShardPrefHelper.getDataFromShared(clsShardName.localization_shard) as String?;
     switch(localCode){
@@ -26,7 +31,8 @@ class clsLocalizationContoller extends ChangeNotifier{
 
   void updateLocalization(){
 
-  
+    _isChageLanguage = true;
+    notifyListeners();
 
     switch(_local==Locale('ar')){
       case true:{
@@ -38,8 +44,12 @@ class clsLocalizationContoller extends ChangeNotifier{
         clsShardPrefHelper(clsShardName.localization_shard).SaveDataToShard("ar");
       }
     }
+    Future.delayed(Duration(seconds: 3));
+    _isChageLanguage = false;
     notifyListeners();
   }
+
+
 
 
 }

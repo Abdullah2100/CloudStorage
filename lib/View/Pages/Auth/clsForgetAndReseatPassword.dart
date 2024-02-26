@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloudapp/Controller/clsLocalizationContoller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloudapp/Animation/clsRithSlideAnimation.dart';
@@ -12,6 +13,7 @@ import 'package:cloudapp/View/GenralComponent/clsTextReqiured.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:cloudapp/generated/l10n.dart';
+
 
 enum enscreansState { forgetPassword, detectInfo, Reseat }
 
@@ -61,8 +63,6 @@ class _clsForgetAndReseatPasswordState
     switch (isComplate) {
       case true:
         {
-          Provider.of<clsAuthController>(context, listen: false)
-              .changeLoadingState(false);
           // switch(widget.isRigister){
           //   case true:{
           //     clsCustomMessage.Message("تم انشاء حساب المستخدم بنجاح", true, context);
@@ -75,9 +75,6 @@ class _clsForgetAndReseatPasswordState
         }
       default:
         {
-          Provider.of<clsAuthController>(context, listen: false)
-              .changeLoadingState(false);
-
           clsCustomMessage.Message("$message", false, context);
         }
     }
@@ -86,8 +83,18 @@ class _clsForgetAndReseatPasswordState
   @override
   Widget build(BuildContext context) {
     var pvAuthController = Provider.of<clsAuthController>(context);
+    var pvLocalizationController = Provider.of<clsLocalizationContoller>(context);
+
     return Scaffold(
-        body: SingleChildScrollView(
+        body: pvLocalizationController.isChagneLoanguage
+            ? Container(
+            height: clsDeviceSize.getDeviceHeight(context),
+            width: clsDeviceSize.getDeviceWidth(context),
+            alignment: Alignment.center,
+            child: CircularProgressIndicator(
+              color: clsColors.secondary,
+            ))
+            :  SingleChildScrollView(
             child: Container(
       margin: const EdgeInsets.only(right: 15, left: 15, top: 79),
       child: Column(children: [
@@ -99,38 +106,47 @@ class _clsForgetAndReseatPasswordState
               children: [
                 Text(
                   widget.state == enscreansState.forgetPassword
-                      ? "نسيت كلمة المرور"
+                      ? S.of(context).forgetPassword.substring(0, 20)
                       : (widget.state == enscreansState.forgetPassword
-                          ? "التحقق"
-                          : "تغيير كلمة السر"),
+                          ?S.of(context).detect
+                          : S.of(context).changePassword),
                   style: clsFontStyle.bloodStyle
                       .copyWith(fontSize: 20, color: clsColors.onbardingColor),
                 ),
+                SizedBox(
+                  height: 5,
+                ),
                 Text(
                   widget.state == enscreansState.forgetPassword
-                      ? "يتوجب عليك ادخال بريدك الإلكتروني أ رقم هاتفك للمواصلة"
+                      ? S.of(context).mustEnterEmail
                       : (widget.state == enscreansState.detectInfo
                           ? (!isEmail
-                              ? "أدخل الرقم الذي تم ارساله إلى رقم هاتفك للمواصلة"
-                              : "أدخل الرقم الذي تم ارساله إلى رقم بريدك الإلكتروني للمواصلة")
-                          : "أدخل الرقم الذي تم ارساله إلى رقم بريدك الإلكتروني للمواصلة"),
+                              ?S.of(context).enterPhonOtp
+                              : S.of(context).enterEmailOtp)
+                          : isEmail?S.of(context).enterEmailOtp:S.of(context).enterPhonOtp),
                   style: clsFontStyle.regularStyle
                       .copyWith(fontSize: 12, color: clsColors.gray),
                 )
               ],
             ),
-            Row(
-              children: [
-                Text(
-                  S.of(context).lang,
-                  style: clsFontStyle.regularStyle
-                      .copyWith(fontSize: 12, color: clsColors.secondary),
-                ),
-                Icon(
-                  Icons.keyboard_arrow_down_outlined,
-                  color: clsColors.secondary,
-                )
-              ],
+            InkWell(
+              onTap: (){
+
+                pvLocalizationController.updateLocalization();
+              },
+              child: Row(
+                children: [
+                  Text(
+                    S.of(context).lang,
+                    style: clsFontStyle.regularStyle
+                        .copyWith(fontSize: 12, color: clsColors.secondary),
+                  ),
+                  Icon(
+                    Icons.keyboard_arrow_down_outlined,
+                    color: clsColors.secondary,
+                  )
+                ],
+              ),
             ),
           ],
         ),
@@ -161,7 +177,7 @@ class _clsForgetAndReseatPasswordState
                       ),
                       width: (clsDeviceSize.getDeviceWidth(context) / 2) - 20,
                       child: Text(
-                        "البريد الاكتروني",
+                        S.of(context).email,
                         style: clsFontStyle.mediamStyle.copyWith(
                             color: clsColors.onbardingColor, fontSize: 14),
                       ),
@@ -180,7 +196,7 @@ class _clsForgetAndReseatPasswordState
                         color: isEmail ? Colors.transparent : Colors.white,
                       ),
                       width: (clsDeviceSize.getDeviceWidth(context) / 2) - 20,
-                      child: Text("رقم الهاتف",
+                      child: Text(S.of(context).phone,
                           style: clsFontStyle.mediamStyle.copyWith(
                               color: clsColors.onbardingColor, fontSize: 14)),
                     ),
@@ -198,7 +214,7 @@ class _clsForgetAndReseatPasswordState
             clsTextReqiured(
                 style: clsFontStyle.mediamStyle
                     .copyWith(fontSize: 14, color: Colors.black),
-                value: "البريد الاكتروني"),
+                value: S.of(context).email),
             Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
@@ -223,7 +239,7 @@ class _clsForgetAndReseatPasswordState
                       label: Padding(
                         padding: const EdgeInsets.only(right: 20),
                         child: Text(
-                          "أدخال بريدك الاكتروني ",
+                        S.of(context).enterEmail,
                           textAlign: TextAlign.center,
                           style: clsFontStyle.mediamStyle
                               .copyWith(fontSize: 14, color: clsColors.gray),
@@ -242,7 +258,7 @@ class _clsForgetAndReseatPasswordState
             clsTextReqiured(
                 style: clsFontStyle.mediamStyle
                     .copyWith(fontSize: 14, color: Colors.black),
-                value: "رقم الهاتف"),
+                value:S.of(context).phone),
             Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
@@ -267,7 +283,7 @@ class _clsForgetAndReseatPasswordState
                       label: Padding(
                         padding: const EdgeInsets.only(right: 20),
                         child: Text(
-                          "ادخل رقم الهاتف",
+                        S.of(context).enterPhone,
                           textAlign: TextAlign.center,
                           style: clsFontStyle.mediamStyle
                               .copyWith(fontSize: 14, color: clsColors.gray),
@@ -285,26 +301,23 @@ class _clsForgetAndReseatPasswordState
         ],
         if (widget.state == enscreansState.detectInfo) ...[
           Pinput(
-
             length: 6,
             defaultPinTheme: PinTheme(
                 width: 44,
                 height: 50,
-                textStyle:clsFontStyle.bloodStyle.copyWith(
+                textStyle: clsFontStyle.bloodStyle.copyWith(
                     fontSize: 16,
                     color: clsColors.primary,
-                    fontWeight: FontWeight.w600
-                ),
+                    fontWeight: FontWeight.w600),
                 decoration: BoxDecoration(
                   border: Border.all(color: clsColors.secondary),
                   borderRadius: BorderRadius.circular(12),
                 )),
 
-
             validator: (s) {
               return s == '2222' ? null : 'Pin is incorrect';
             },
-          //  pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+            //  pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
             showCursor: true,
             onCompleted: (pin) => print(pin),
           ),
@@ -341,7 +354,7 @@ class _clsForgetAndReseatPasswordState
                   child: Row(
                     children: [
                       Text(
-                        "أعادة ارسال رمز التاكيد",
+                        S.of(context).resendOtp,
                         style: clsFontStyle.regularStyle
                             .copyWith(fontSize: 12, color: clsColors.secondary),
                       ),
@@ -372,7 +385,7 @@ class _clsForgetAndReseatPasswordState
           clsTextReqiured(
               style: clsFontStyle.mediamStyle
                   .copyWith(fontSize: 14, color: Colors.black),
-              value: "كلمة السر الجديدة"),
+              value:S.of(context).newPassword),
           Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
@@ -433,7 +446,7 @@ class _clsForgetAndReseatPasswordState
           clsTextReqiured(
               style: clsFontStyle.mediamStyle
                   .copyWith(fontSize: 14, color: Colors.black),
-              value: "تاكيد كلمة السر"),
+              value: S.of(context).confirmPassword),
           Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
@@ -526,10 +539,10 @@ class _clsForgetAndReseatPasswordState
                   )
                 : Text(
                     widget.state == enscreansState.forgetPassword
-                        ? "تغيير كلمة السر"
+                        ?S.of(context).changePassword
                         : (widget.state == enscreansState.detectInfo
-                            ? "متابعه"
-                            : "تغيير كلمة السر"),
+                            ?S.of(context).contenue
+                            : S.of(context).changePassword),
                     style: clsFontStyle.regularStyle
                         .copyWith(fontSize: 16, color: Colors.white),
                   )),
@@ -557,7 +570,7 @@ class _clsForgetAndReseatPasswordState
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "رجوع للخلف",
+                            S.of(context).goBack,
                             style: clsFontStyle.regularStyle.copyWith(
                                 fontSize: 16, color: clsColors.secondary),
                           ),

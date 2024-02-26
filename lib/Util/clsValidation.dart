@@ -15,4 +15,15 @@ static bool isEmailValid(String email){
         ? true
         : false;
 }
+
+static bool urlValidation(String url){
+
+    const pattern = r"^(http(s):\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$";
+    var regex = RegExp(pattern);
+
+    return url!.isNotEmpty && !regex.hasMatch(pattern)
+        ? true
+        : false;
+}
+
 }

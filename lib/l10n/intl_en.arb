@@ -18,7 +18,23 @@
   "password": "Password",
   "enterYourAccountName":"Enter your account name",
   "enterEmail": "Enter your email",
-  "enterPhone":"Enter a phone number"
+  "enterPhone":"Enter a phone number",
+  "logIn":"Log In",
+  "alreadyHavAccount":"Do you have an account on the platform?",
+  "forgetPassword": "Forgot your password?",
+  "rigist":"registration",
+  "loginByGoogle":"Follow via Google",
+  "mustEnterEmail":"You must enter your email or phone number to continue.",
+  "detect": "Detect",
+  "changePassword": "Change Password",
+  "enterPhonOtp": "Enter the number that was sent to your phone to continue",
+  "enterEmailOtp":"Enter the number that was sent to your email number to continue",
+  "goBack":"Go Back",
+   "contenue": "Continue",
+  "confirmPassword": "Password Confirmation",
+  "newPassword": "new password",
+  "resendOtp": "Resend confirmation code"
+
 
 
 }

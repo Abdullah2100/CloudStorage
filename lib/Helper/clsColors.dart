@@ -11,6 +11,7 @@ class clsColors{
   static Color gray = const Color(0xFFABABAB);
   static Color grayLignt = const Color(0xFFE5E5E5);
   static Color black =const Color(0xFF131313);
+  static Color blackLignt =const Color(0xFF484848);
   static Color onbardingColor = const Color(0xFF1A4766);
   static Color white = const Color(0xFFFFFFFF);
   static Color grayLow = const Color(0xFFF7F7F7);

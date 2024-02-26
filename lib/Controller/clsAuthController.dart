@@ -1,7 +1,5 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
-
+import 'dart:io';
+import 'package:cloudapp/Util/clsTokenHolder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloudapp/Helper/clsNetworkCall.dart';
 import 'package:cloudapp/Helper/clsShardName.dart';
@@ -12,7 +10,10 @@ import '../Modle/clsLoginModle.dart';
 import 'package:dio/dio.dart';
 
 class clsAuthController extends ChangeNotifier {
-  bool isStartLoading = false;
+  bool _isStartLoading = false;
+ bool? _isValideAuth = true;
+  bool get isStartLoading => _isStartLoading;
+  bool? get isValideAuth => (clsTokentHolder.token!=null?true:_isValideAuth);
 
   Future<void> createNewUser(clsRigesterModle data, Function handler,
       {isPhone = false}) async {
@@ -25,7 +26,7 @@ class clsAuthController extends ChangeNotifier {
       'password': data.password
     });
     try {
-      isStartLoading = true;
+      _isStartLoading = true;
       notifyListeners();
 
       Response result = await dio.post(url.trim(), data: body);
@@ -35,6 +36,10 @@ class clsAuthController extends ChangeNotifier {
       if (result.statusCode == 200&&state==true) {
         String? token = result.data['data']['token'];
         String? copune = result.data['data']['user']['cupon'];
+       clsTokentHolder.token= token??"";
+        _isStartLoading = false;
+        notifyListeners();
+
         if (token != null&&copune!=null) {
           clsShardPrefHelper(clsShardName.token_shard).SaveDataToShard<String>(token);
           clsShardPrefHelper(clsShardName.cupune_shard).SaveDataToShard<String>(copune);
@@ -43,9 +48,13 @@ class clsAuthController extends ChangeNotifier {
       } else {
         handler("", false);
       }
+
     } on DioException catch (e) {
       String message = e.response?.data['message']??"";
+      _isStartLoading = false;
+      notifyListeners();
       handler(message, false);
+
     }
   }
 
@@ -59,17 +68,20 @@ class clsAuthController extends ChangeNotifier {
     });
 
     try {
-      isStartLoading = true;
+      _isStartLoading = true;
       notifyListeners();
 
       var result = await dio.post(url.trim(), data: body);
 
       String? message = result.data["message"];
       bool state = result.data['status'] ?? false;
+      _isStartLoading = false;
+      notifyListeners();
+
       if (result.statusCode == 200 && state == true) {
         String? token = result.data['data']['token'];
         String? copune = result.data['data']['user']['cupon'];
-
+       clsTokentHolder.token=token??"";
         if(token!=null&&copune!=null){
           clsShardPrefHelper(clsShardName.token_shard).SaveDataToShard<String>(token);
           clsShardPrefHelper(clsShardName.cupune_shard).SaveDataToShard<String>(copune);
@@ -79,14 +91,49 @@ class clsAuthController extends ChangeNotifier {
       } else {
         handler(message ?? "", false);
       }
+
     } on DioException catch (e) {
       String message = e.response?.data['message']??"";
-      handler(message, false);    }
-    notifyListeners();
+      _isStartLoading = false;
+      notifyListeners();
+      handler(message, false);
+    }
   }
 
-  void changeLoadingState(bool state) {
-    isStartLoading = false;
+
+
+  Future<bool> isValideToken()async{
+    bool isValideToken =true;
+    String url = clsNetworkCall.pasd_url+clsNetworkCall.getprofileData_url;
+    String token = (await clsShardPrefHelper.getDataFromShared(clsShardName.token_shard) as String?) ??"";
+   clsTokentHolder.token= token;
+    var dio = Dio();
+    try{
+
+      Response result =await dio.get(
+          url,options:Options(headers: {
+        HttpHeaders.authorizationHeader:"Bearer $token",
+        Headers.acceptHeader: 'application/json',
+      }));
+      if(result.statusCode==401) {
+        isValideToken = false;
+        isValideToken = false;
+      }
+      notifyListeners();
+
+    } on DioException catch(e){
+      isValideToken = false;
+
+      if(e.response?.statusCode==401){
+        isValideToken = false;
+      }
+    }
+    _isValideAuth = isValideToken;
     notifyListeners();
+
+    return isValideToken;
   }
+
+
+
 }

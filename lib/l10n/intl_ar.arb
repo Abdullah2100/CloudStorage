@@ -18,5 +18,21 @@
     "password": "كلمة السر",
   "enterYourAccountName": "أدخل اسم حسابك",
   "enterEmail": "أدخال بريدك الاكتروني",
-  "enterPhone":"ادخل رقم الهاتف"
+  "enterPhone":"ادخل رقم الهاتف",
+    "logIn": "سجل الدخول",
+  "alreadyHavAccount":"تمتلك حسابا على المنصة؟",
+  "forgetPassword": "نسيت كلمة السر؟",
+  "rigist":"تسجيل",
+  "loginByGoogle":"متابعة عن طريق جوجل",
+   "mustEnterEmail":"يتوجب عليك ادخال بريدك الإلكتروني أ رقم هاتفك للمواصلة",
+  "detect": "تحقق",
+  "changePassword": "تغيير كلمة السر",
+  "enterPhonOtp": "أدخل الرقم الذي تم ارساله إلى رقم هاتفك للمواصلة",
+  "enterEmailOtp": "أدخل الرقم الذي تم ارساله إلى رقم بريدك الإلكتروني للمواصلة",
+  "goBack":"رجوع للخلف",
+  "contenue":"متابعة",
+  "confirmPassword": "تاكيد كلمة السر",
+"newPassword": "كلمة السر الجديدة",
+  "resendOtp": "أعادة ارسال رمز التاكيد"
+
 }

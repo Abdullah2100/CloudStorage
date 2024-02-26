@@ -25,8 +25,19 @@ class clsImages{
   static String chate= "asset/Images/chate.png";
   static String schesual= "asset/Images/schesual.png";
   static String link= "asset/Images/link.png";
+  static String linkIcon= "asset/Images/linkIcon.png";
+  static String mapIcon= "asset/Images/map.png";
   static String shopping= "asset/Images/shopping.png";
   static String booket= "asset/Images/booket.png";
+  static String call= "asset/Images/call.png";
+  static String more= "asset/Images/more.png";
+  static String edit= "asset/Images/edit.png";
+  static String star= "asset/Images/star.png";
+  static String delete= "asset/Images/delete.png";
+  static String mobile= "asset/Images/mobile.png";
+  static String folder= "asset/Images/folder.png";
+  static String folderIcon= "asset/Images/folderIcon.png";
+  static String export= "asset/Images/export.png";
  // static String user  static String notification= "asset/Images/notification.png";AndPassword= "asset/Images/usernameAndPasswordIcon.png";
 
 }

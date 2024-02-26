@@ -1,6 +1,7 @@
 import 'package:cloudapp/Helper/clsColors.dart';
 import 'package:cloudapp/Helper/clsDeviceSize.dart';
 import 'package:cloudapp/Helper/clsFontStyle.dart';
+import 'package:cloudapp/Modle/clsCategoryModle.dart';
 import 'package:cloudapp/Util/clsDateShape.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,26 +9,19 @@ import 'package:flutter/material.dart';
 class clsCategoryShape extends StatelessWidget {
   BuildContext context;
   String image;
-  String name;
-  String modifyDate;
-  int totalSize;
-  int remidSize;
-  int usedSize;
+  clsCategoryModle modle;
   Function() onClick;
 
   clsCategoryShape(
       {super.key,
       required this.image,
-      required this.name,
       required this.context,
-      required this.modifyDate,
-      required this.remidSize,
-      required this.totalSize,
-      required this.usedSize,
+      required this.modle,
       required this.onClick});
 
   @override
   Widget build(BuildContext context) {
+  //  print("this the category name ${this.name}  = == = =");
     return Container(
 
       decoration: BoxDecoration(
@@ -39,14 +33,14 @@ class clsCategoryShape extends StatelessWidget {
       width: clsDeviceSize.getDeviceWidth(context),
       child: InkWell(
         radius: 12 ,
-        onTap: this.onClick,
+        onTap: onClick,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Image.asset(this.image,height: 48,width: 48,),
+                Image.asset(image,height: 48,width: 48,),
                 Container(
                   // color: Colors.green,
                   child: Row(
@@ -59,7 +53,7 @@ class clsCategoryShape extends StatelessWidget {
                       ),
                       Text(
                          // modifyDate,
-                      clsDateShape(modifyDate).customDate(),
+                      clsDateShape(modle.updatedAt.toString()).customDate(),
                         style: clsFontStyle.regularStyle
                             .copyWith(color: clsColors.gray, fontSize: 12),
                       ),
@@ -73,7 +67,7 @@ class clsCategoryShape extends StatelessWidget {
               height: 5,
             ),
             Text(
-              this.name,
+              "${modle.name}",
               style: clsFontStyle.bloodStyle
                   .copyWith(color: clsColors.black, fontSize: 16),
             ),
@@ -91,7 +85,7 @@ class clsCategoryShape extends StatelessWidget {
                           .copyWith(color: clsColors.gray, fontSize: 12),
                     ),
                     Text(
-                      '${this.totalSize}',
+                      '${this.modle.totalSpace}',
                       style: clsFontStyle.bloodStyle
                           .copyWith(color: clsColors.gray, fontSize: 12),
                     ),
@@ -105,7 +99,7 @@ class clsCategoryShape extends StatelessWidget {
                           .copyWith(color: clsColors.gray, fontSize: 12),
                     ),
                     Text(
-                      '${this.remidSize}',
+                      '${(modle.totalSpace??0)-(modle?.useSpace??0)}',
                       style: clsFontStyle.bloodStyle
                           .copyWith(color: clsColors.gray, fontSize: 12),
                     ),
@@ -119,7 +113,7 @@ class clsCategoryShape extends StatelessWidget {
                           .copyWith(color: clsColors.gray, fontSize: 12),
                     ),
                     Text(
-                      '${this.usedSize}',
+                      '${modle.useSpace}',
                       style: clsFontStyle.bloodStyle
                           .copyWith(color: clsColors.gray, fontSize: 12),
                     ),

@@ -249,6 +249,156 @@ class S {
       args: [],
     );
   }
+
+  /// `Log In`
+  String get logIn {
+    return Intl.message(
+      'Log In',
+      name: 'logIn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you have an account on the platform?`
+  String get alreadyHavAccount {
+    return Intl.message(
+      'Do you have an account on the platform?',
+      name: 'alreadyHavAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Forgot your password?`
+  String get forgetPassword {
+    return Intl.message(
+      'Forgot your password?',
+      name: 'forgetPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `registration`
+  String get rigist {
+    return Intl.message(
+      'registration',
+      name: 'rigist',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Follow via Google`
+  String get loginByGoogle {
+    return Intl.message(
+      'Follow via Google',
+      name: 'loginByGoogle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You must enter your email or phone number to continue.`
+  String get mustEnterEmail {
+    return Intl.message(
+      'You must enter your email or phone number to continue.',
+      name: 'mustEnterEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Detect`
+  String get detect {
+    return Intl.message(
+      'Detect',
+      name: 'detect',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change Password`
+  String get changePassword {
+    return Intl.message(
+      'Change Password',
+      name: 'changePassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter the number that was sent to your phone to continue`
+  String get enterPhonOtp {
+    return Intl.message(
+      'Enter the number that was sent to your phone to continue',
+      name: 'enterPhonOtp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter the number that was sent to your email number to continue`
+  String get enterEmailOtp {
+    return Intl.message(
+      'Enter the number that was sent to your email number to continue',
+      name: 'enterEmailOtp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Go Back`
+  String get goBack {
+    return Intl.message(
+      'Go Back',
+      name: 'goBack',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue`
+  String get contenue {
+    return Intl.message(
+      'Continue',
+      name: 'contenue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password Confirmation`
+  String get confirmPassword {
+    return Intl.message(
+      'Password Confirmation',
+      name: 'confirmPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `new password`
+  String get newPassword {
+    return Intl.message(
+      'new password',
+      name: 'newPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resend confirmation code`
+  String get resendOtp {
+    return Intl.message(
+      'Resend confirmation code',
+      name: 'resendOtp',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
